@@ -1,1 +1,110 @@
 @import "tailwindcss";
+
+@theme {
+  --color-ink: #0b0c0c;
+  --color-muted: #484949;
+  --color-brand: #0b4f6c;
+  --color-brand-dark: #073a50;
+  --color-link: #1d4ed8;
+  --color-link-visited: #5b2a86;
+  --color-focus: #ffdd00;
+  --color-danger: #b42318;
+  --color-success: #116f3b;
+  --color-border: #b1b4b6;
+  --color-surface: #f3f2f1;
+  --color-button: #00703c;
+  --color-button-dark: #005a30;
+}
+
+@layer base {
+  body {
+    @apply bg-white text-lg leading-relaxed text-ink antialiased sm:text-xl;
+    font-family:
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      "Segoe UI",
+      Roboto,
+      Arial,
+      sans-serif;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply leading-tight;
+  }
+
+  /* A high-contrast focus style that works on every background (yellow with a black underline). */
+  a:focus-visible,
+  button:focus-visible,
+  summary:focus-visible {
+    outline: 3px solid transparent;
+    background-color: var(--color-focus);
+    color: var(--color-ink);
+    box-shadow:
+      0 -2px var(--color-focus),
+      0 4px var(--color-ink);
+    text-decoration: none;
+  }
+
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 0;
+    box-shadow: inset 0 0 0 2px var(--color-ink);
+  }
+
+  [tabindex="-1"]:focus {
+    outline: none;
+  }
+}
+
+@utility container-page {
+  @apply mx-auto w-full max-w-5xl px-4 sm:px-8;
+}
+
+@utility link {
+  @apply text-link underline decoration-1 underline-offset-[0.15em] hover:decoration-[3px];
+}
+
+@utility back-link {
+  @apply relative inline-block pl-4 text-base text-ink underline underline-offset-2 before:absolute before:top-1/2 before:left-0 before:-translate-y-1/2 before:content-['‹'];
+}
+
+@utility btn {
+  @apply inline-flex cursor-pointer items-center justify-center px-5 py-2 text-lg font-bold shadow-[0_2px_0] disabled:cursor-not-allowed disabled:opacity-60;
+}
+
+@utility btn-primary {
+  @apply bg-button text-white shadow-[#002d18] hover:bg-button-dark;
+}
+
+@utility btn-secondary {
+  @apply bg-surface text-ink shadow-[#929191] hover:bg-[#dbdad9];
+}
+
+@utility btn-small {
+  @apply px-3 py-1 text-base;
+}
+
+@utility field {
+  @apply h-11 border-2 border-ink bg-white px-2 text-lg aria-invalid:border-danger;
+}
+
+@utility radio {
+  @apply size-8 shrink-0 accent-ink;
+}
+
+@utility inset {
+  @apply border-l-[10px] border-border py-3 pl-4;
+}
+
+@utility table {
+  @apply w-full border-collapse text-left text-base sm:text-lg [&_td]:border-b [&_td]:border-border [&_td]:py-3 [&_td]:pr-4 [&_th]:border-b [&_th]:border-border [&_th]:py-3 [&_th]:pr-4 [&_th]:font-bold;
+}
+
+@utility timeline {
+  @apply space-y-6 border-l-4 border-brand pl-6 [&>li]:relative [&>li]:before:absolute [&>li]:before:top-2 [&>li]:before:-left-[34px] [&>li]:before:size-4 [&>li]:before:rounded-full [&>li]:before:bg-brand;
+}
