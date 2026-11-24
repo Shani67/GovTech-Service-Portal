@@ -118,7 +118,7 @@ export default async function QueuePage({ searchParams }: Props) {
             <tbody>
               {result.rows.map((row) => (
                 <tr key={row.id}>
-                  <td>
+                  <td className="whitespace-nowrap">
                     <Link href={`/staff/applications/${row.id}`} className="link font-bold">
                       {row.reference}
                     </Link>

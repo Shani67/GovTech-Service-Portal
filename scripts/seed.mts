@@ -8,9 +8,10 @@ import type { Db } from "../src/db/types";
 const url = process.env.DATABASE_URL;
 const staffPassword = process.env.STAFF_DEMO_PASSWORD;
 
+// Runs on every deploy, so it skips quietly when there is nothing to do.
 if (!url || !staffPassword) {
-  console.error("Set DATABASE_URL and STAFF_DEMO_PASSWORD to seed a database.");
-  process.exit(1);
+  console.log("DATABASE_URL or STAFF_DEMO_PASSWORD is not set: skipping the demo data.");
+  process.exit(0);
 }
 
 const client = postgres(url, { max: 1 });
@@ -18,6 +19,6 @@ const result = await seed(drizzle(client, { schema }) as unknown as Db, { staffP
 await client.end();
 console.log(
   result.skipped
-    ? "Database already has staff users: nothing to seed."
+    ? "The database already has staff users: nothing to seed."
     : `Seeded ${result.applications} applications.`,
 );
