@@ -48,8 +48,22 @@ export const premisesStep = z.object({
     .max(10000, "Number of employees must be 10,000 or fewer"),
 });
 
+/** True for a calendar date that exists, so 31 February is refused. */
+function isRealDate(value: string): boolean {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  if (!match) return false;
+  const [year, month, day] = match.slice(1).map(Number);
+  const date = new Date(Date.UTC(year, month - 1, day));
+  return (
+    date.getUTCFullYear() === year && date.getUTCMonth() === month - 1 && date.getUTCDate() === day
+  );
+}
+
 export const startDateStep = z.object({
-  startsOn: z.iso.date({ error: "Enter the date trading starts" }),
+  startsOn: z
+    .string({ error: "Enter the date trading starts" })
+    .min(1, "Enter the date trading starts")
+    .refine(isRealDate, "Date trading starts must be a real date"),
 });
 
 // Old NIC: 9 digits followed by V or X. New NIC: 12 digits.
