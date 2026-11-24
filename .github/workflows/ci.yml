@@ -30,9 +30,26 @@ jobs:
       - run: npm run build
 
   e2e:
-    name: End-to-end and accessibility tests
+    name: End-to-end and accessibility tests (PostgreSQL)
     runs-on: ubuntu-latest
     needs: quality
+    # Runs the app against a real PostgreSQL server, as in production.
+    # Unit and integration tests cover the in-process PGlite database.
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+      STAFF_DEMO_PASSWORD: demo-password
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -41,6 +58,9 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
+      - name: Apply migrations twice (they must be idempotent)
+        run: npm run db:migrate && npm run db:migrate
+      - run: npm run db:seed
       - run: npm run build
       - run: npm run test:e2e
       - uses: actions/upload-artifact@v7
